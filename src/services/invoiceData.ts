@@ -30,7 +30,7 @@ export class InvoiceDataService {
 
   public async loadInvoiceData(): Promise<Invoice[]> {
     try {
-      const csvText = await this.httpService.getText('/src/mocks/data.csv');
+      const { data: csvText } = await this.httpService.httpInstance.get('/src/mocks/data.csv', { responseType: 'text' });
 
       return new Promise((resolve, reject) => {
         Papa.parse(csvText, {

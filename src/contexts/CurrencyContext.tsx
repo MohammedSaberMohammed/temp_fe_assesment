@@ -2,29 +2,30 @@ import React, { createContext, useState, useEffect, useCallback } from 'react';
 import type { ReactNode } from 'react';
 import { CurrencyService } from '../services/currency';
 import type { CurrencyRate } from '@/models/invoice';
+import { DefaultCurrency, SupportedCurrencies } from '@/services/staticLookups';
+import type { SupportedCurrenciesCodesEnum } from '@/enums/supportedCurrenciesCodes';
 
 export interface CurrencyContextReturn {
-  selectedCurrency: string;
+  selectedCurrency: SupportedCurrenciesCodesEnum;
   exchangeRates: Record<string, number>;
   supportedCurrencies: CurrencyRate[];
   loading: boolean;
   error: string | null;
-  changeCurrency: (currency: string) => void;
-  convertAmount: (amount: number, fromCurrency?: string) => number;
+  changeCurrency: (currency: SupportedCurrenciesCodesEnum) => void;
+  convertAmount: (amount: number, fromCurrency?: SupportedCurrenciesCodesEnum) => number;
   formatAmount: (amount: number) => string;
-  refreshRates: () => Promise<void>;
 }
 
 export const CurrencyContext = createContext<CurrencyContextReturn | undefined>(undefined);
 
 interface CurrencyProviderProps {
   children: ReactNode;
-  defaultCurrency?: string;
+  defaultCurrency?: SupportedCurrenciesCodesEnum;
 }
 
 export const CurrencyProvider: React.FC<CurrencyProviderProps> = ({ 
   children, 
-  defaultCurrency = 'SAR' 
+  defaultCurrency = DefaultCurrency 
 }) => {
   const [selectedCurrency, setSelectedCurrency] = useState(defaultCurrency);
   const [exchangeRates, setExchangeRates] = useState<Record<string, number>>({});
@@ -32,14 +33,13 @@ export const CurrencyProvider: React.FC<CurrencyProviderProps> = ({
   const [error, setError] = useState<string | null>(null);
   
   const currencyService = CurrencyService.getInstance();
-  const supportedCurrencies = currencyService.getSupportedCurrencies();
 
   const fetchExchangeRates = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
       
-      const rates = await currencyService.getExchangeRates('SAR');
+      const rates = await currencyService.getExchangeRates(selectedCurrency);
       setExchangeRates(rates);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to fetch exchange rates';
@@ -48,14 +48,14 @@ export const CurrencyProvider: React.FC<CurrencyProviderProps> = ({
     } finally {
       setLoading(false);
     }
-  }, [currencyService]);
+  }, [currencyService, selectedCurrency]);
 
-  const changeCurrency = useCallback((currency: string) => {
+  const changeCurrency = useCallback((currency: SupportedCurrenciesCodesEnum) => {
     setSelectedCurrency(currency);
   }, []);
 
   const convertAmount = useCallback(
-    (amount: number, fromCurrency = 'SAR'): number => {
+    (amount: number, fromCurrency = DefaultCurrency): number => {
       return currencyService.convertAmount(amount, fromCurrency, selectedCurrency, exchangeRates);
     },
     [currencyService, selectedCurrency, exchangeRates]
@@ -68,24 +68,19 @@ export const CurrencyProvider: React.FC<CurrencyProviderProps> = ({
     [currencyService, selectedCurrency]
   );
 
-  const refreshRates = useCallback(async () => {
-    await fetchExchangeRates();
-  }, [fetchExchangeRates]);
-
   useEffect(() => {
     fetchExchangeRates();
-  }, [fetchExchangeRates]);
+  }, [fetchExchangeRates, selectedCurrency]);
 
   const value: CurrencyContextReturn = {
     selectedCurrency,
     exchangeRates,
-    supportedCurrencies,
+    supportedCurrencies: SupportedCurrencies,
     loading,
     error,
     changeCurrency,
     convertAmount,
     formatAmount,
-    refreshRates,
   };
 
   return (
