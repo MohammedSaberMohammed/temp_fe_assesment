@@ -19,5 +19,9 @@ export default tseslint.config([
       ecmaVersion: 2020,
       globals: globals.browser,
     },
+    rules: {
+      // Disable react-refresh rules for development
+      'react-refresh/only-export-components': 'warn',
+    },
   },
 ])
