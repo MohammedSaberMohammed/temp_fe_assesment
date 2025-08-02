@@ -1,6 +1,7 @@
 import Papa from 'papaparse';
 import type { Invoice, DashboardStats, ProjectSummary, BudgetCodeSummary } from '@/models/invoice';
 import { CsvFieldsKeysEnum } from '@/enums/csvFieldsKeys';
+import { HttpService } from './http';
 
 interface CsvRow {
   [CsvFieldsKeysEnum.PurchaseOrderNumber]: string;
@@ -13,18 +14,23 @@ interface CsvRow {
   [CsvFieldsKeysEnum.PaymentAmount]: string;
 }
 
-export class DataService {
-  private static parseAmount(amountStr: string): number {
+export class InvoiceDataService {
+  private httpService: HttpService;
+
+  constructor() {
+    this.httpService = new HttpService();
+  }
+
+  private parseAmount(amountStr: string): number {
     if (!amountStr || amountStr.trim() === '') return 0;
     // Remove commas, spaces, and any non-numeric characters except decimal points
     const cleanAmount = amountStr.replace(/[,\s]/g, '').replace(/[^\d.-]/g, '');
     return parseFloat(cleanAmount) || 0;
   }
 
-  public static async loadInvoiceData(): Promise<Invoice[]> {
+  public async loadInvoiceData(): Promise<Invoice[]> {
     try {
-      const response = await fetch('/src/mocks/data.csv');
-      const csvText = await response.text();
+      const csvText = await this.httpService.getText('/src/mocks/data.csv');
 
       return new Promise((resolve, reject) => {
         Papa.parse(csvText, {
@@ -34,7 +40,6 @@ export class DataService {
             try {
               const invoices: Invoice[] = (results.data as CsvRow[]).map((row: CsvRow) => {
                 const paymentAmount = this.parseAmount(row[CsvFieldsKeysEnum.PaymentAmount]);
-                console.log(row, row[CsvFieldsKeysEnum.PaymentAmount], paymentAmount);
                 
                 return {
                   purchaseOrderNumber: row[CsvFieldsKeysEnum.PurchaseOrderNumber]?.trim() || '',
@@ -65,7 +70,7 @@ export class DataService {
     }
   }
 
-  public static calculateDashboardStats(invoices: Invoice[]): DashboardStats {
+  public calculateDashboardStats(invoices: Invoice[]): DashboardStats {
     const totalInvoices = invoices.length;
     const paidInvoices = invoices.filter(inv => inv.isPaid).length;
     const totalInvoiceAmount = invoices.reduce((sum, inv) => sum + inv.invoiceAmount, 0);

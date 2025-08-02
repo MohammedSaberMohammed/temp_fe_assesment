@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect, useCallback } from 'react';
 import type { ReactNode } from 'react';
-import { CurrencyService } from '../services/currencyService';
-import type { CurrencyRate } from '../types/invoice.types';
+import { CurrencyService } from '../services/currency';
+import type { CurrencyRate } from '@/models/invoice';
 
 export interface CurrencyContextReturn {
   selectedCurrency: string;

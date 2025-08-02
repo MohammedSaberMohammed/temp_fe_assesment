@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { Invoice, DashboardStats } from '@/models/invoice';
-import { DataService } from '@/services/dataService';
+import { InvoiceDataService } from '@/services/invoiceData';
 
 export interface UseInvoiceDataReturn {
   invoices: Invoice[];
@@ -15,14 +15,15 @@ export const useInvoiceData = (): UseInvoiceDataReturn => {
   const [stats, setStats] = useState<DashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [dataService] = useState(() => new InvoiceDataService());
 
   const fetchData = useCallback(async () => {
     try {
       setLoading(true);
       setError(null);
       
-      const invoiceData = await DataService.loadInvoiceData();
-      const calculatedStats = DataService.calculateDashboardStats(invoiceData);
+      const invoiceData = await dataService.loadInvoiceData();
+      const calculatedStats = dataService.calculateDashboardStats(invoiceData);
       
       setInvoices(invoiceData);
       setStats(calculatedStats);
@@ -33,7 +34,7 @@ export const useInvoiceData = (): UseInvoiceDataReturn => {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [dataService]);
 
   const refetchData = useCallback(async () => {
     await fetchData();

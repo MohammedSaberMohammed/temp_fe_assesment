@@ -1,6 +1,6 @@
 import axios from 'axios';
 import type { AxiosInstance, AxiosResponse } from 'axios';
-import type { CurrencyResponse, CurrencyRate } from '../types/invoice.types';
+import type { CurrencyResponse, CurrencyRate } from '@/models/invoice';
 
 export class CurrencyService {
   private static instance: CurrencyService;
@@ -9,6 +9,11 @@ export class CurrencyService {
   private cachedRates: Map<string, { rates: Record<string, number>; timestamp: number }> = new Map();
   private readonly cacheTimeout = 300000; // 5 minutes
 
+
+
+
+
+  
   private constructor() {
     this.axiosInstance = axios.create({
       baseURL: this.baseUrl,
