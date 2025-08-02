@@ -1,4 +1,4 @@
-import type { CurrencyResponse } from '@/models/invoice';
+import type { ICurrencyResponse } from '@/models/invoice';
 import { HttpService } from './http';
 import type { SupportedCurrenciesCodesEnum } from '@/enums/supportedCurrenciesCodes';
 import { DefaultCurrency, FallbackRates } from './staticLookups';
@@ -30,7 +30,7 @@ export class CurrencyService {
         return cached.rates;
       }
 
-      const { data, status } = await this.httpService.httpInstance.get<CurrencyResponse>(`/${baseCurrency}`);
+      const { data, status } = await this.httpService.httpInstance.get<ICurrencyResponse>(`/${baseCurrency}`);
 
       if (status === 200) {
         const rates = data.rates || {};

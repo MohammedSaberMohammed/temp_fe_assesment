@@ -1,17 +1,19 @@
-import React from 'react';
-import { useInvoiceData } from '../hooks/useInvoiceData';
-import { useCurrency } from '../hooks/useCurrency';
+import React, { useMemo } from 'react';
+import { useInvoiceData } from '@/hooks/useInvoiceData';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { Button } from '@/components/ui/button';
-import { formatCurrency } from '../utils/formatters';
+import { BarChart } from '@/components/charts/BarChart';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { EnhancedDashboardContent } from '@/components/EnhancedDashboardContent';
 import { DashboardLayout } from '@/layouts/Dashboard';
+import { MetricCard } from '@/components/MetricCard';
+import { metricCardsData } from './utils';
+import { useCurrency } from '@/hooks/useCurrency';
+import { formatCurrency } from '@/utils/formatters';
 
 export const Dashboard: React.FC = () => {
   const { stats, loading, error, refetchData } = useInvoiceData();
-  
+
   const {
     selectedCurrency,
     convertAmount,
@@ -19,8 +21,29 @@ export const Dashboard: React.FC = () => {
 
   const formatValue = (amount: number) => formatCurrency(convertAmount(amount), selectedCurrency);
 
-  // Loading state
-  if (loading) {
+
+  const chartData = useMemo(() => {
+    if (!stats) return null;
+
+    const projectData = stats.projectSummaries.map(p => ({
+      name: p.projectName,
+      invoiced: p.totalInvoiced,
+      paid: p.totalPaid,
+    })).slice(0, 8);
+
+    const budgetData = stats.budgetCodeSummaries.map(b => ({
+      name: b.budgetCode,
+      invoiced: b.totalInvoiced,
+      paid: b.totalPaid,
+    })).slice(0, 8);
+
+    return {
+      projectData,
+      budgetData,
+    };
+  }, [stats]);
+  
+  if (!loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <Card className="p-8">
@@ -38,7 +61,6 @@ export const Dashboard: React.FC = () => {
     );
   }
 
-  // Error state
   if (error) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -61,7 +83,6 @@ export const Dashboard: React.FC = () => {
     );
   }
 
-  // No data state
   if (!stats) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
@@ -84,10 +105,40 @@ export const Dashboard: React.FC = () => {
 
   return (
     <DashboardLayout>
-      <EnhancedDashboardContent 
-        stats={stats} 
-        formatValue={formatValue} 
-      />
+      <div className="space-y-8">
+        <div className="grid gap-6 lg:grid-cols-4">
+          {metricCardsData(stats, formatValue).map((card, index) => (
+            <MetricCard
+              key={`card_${index + 1}`}
+              value={card.value}
+              description={card.description}
+              icon={card.icon}
+              iconBgColor={card.iconBgColor}
+              badgeColor={card.badgeColor}
+              badgeText={card.badgeText}
+              bgGradient={card.bgGradient}
+              accentGradient={card.accentGradient}
+              customBadges={card.customBadges}
+            />
+          ))}
+        </div>
+
+        {chartData && (
+          <div className="space-y-6">
+            <BarChart
+              title="🏢 Project Performance Analysis"
+              data={chartData.projectData}
+              formatValue={formatValue}
+            />
+
+            <BarChart
+              title="📋 Budget Code Performance"
+              data={chartData.budgetData}
+              formatValue={formatValue}
+            />
+          </div>
+        )}
+      </div>
     </DashboardLayout>
   );
 };

@@ -1,4 +1,4 @@
-export interface Invoice {
+export interface IInvoice {
   purchaseOrderNumber: string;
   budgetCode: string;
   budgetAmount: number;
@@ -10,37 +10,37 @@ export interface Invoice {
   isPaid: boolean;
 }
 
-export interface ProjectSummary {
+export interface IProjectSummary {
   projectName: string;
   totalInvoiced: number;
   totalPaid: number;
   invoiceCount: number;
 }
 
-export interface BudgetCodeSummary {
+export interface IBudgetCodeSummary {
   budgetCode: string;
   totalInvoiced: number;
   totalPaid: number;
   invoiceCount: number;
 }
 
-export interface DashboardStats {
+export interface IDashboardStats {
   totalInvoices: number;
   paidInvoices: number;
   totalInvoiceAmount: number;
   totalPaidAmount: number;
   totalOwed: number;
-  projectSummaries: ProjectSummary[];
-  budgetCodeSummaries: BudgetCodeSummary[];
+  projectSummaries: IProjectSummary[];
+  budgetCodeSummaries: IBudgetCodeSummary[];
 }
 
-export interface CurrencyRate {
+export interface ICurrencyRate {
   code: string;
   name: string;
   rate: number;
 }
 
-export interface CurrencyResponse {
+export interface ICurrencyResponse {
   success: boolean;
   base: string;
   date: string;

@@ -19,7 +19,8 @@ export const Sidebar: React.FC = () => {
           </div>
         </div>
       </div>
-{/* Todo: To be dynamic */}
+      
+      {/* Todo: To be dynamic */}
       <div className="flex-1 p-3 lg:p-4 space-y-4 lg:space-y-6 overflow-y-auto">
         <div className="p-3 lg:p-4 bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200 rounded-lg transition-all duration-200 hover:shadow-md">
           <div className="text-center space-y-1 lg:space-y-2">

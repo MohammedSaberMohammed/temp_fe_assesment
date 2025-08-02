@@ -1,14 +1,14 @@
 import React, { createContext, useState, useEffect, useCallback } from 'react';
 import type { ReactNode } from 'react';
 import { CurrencyService } from '../services/currency';
-import type { CurrencyRate } from '@/models/invoice';
+import type { ICurrencyRate } from '@/models/invoice';
 import { DefaultCurrency, SupportedCurrencies } from '@/services/staticLookups';
 import type { SupportedCurrenciesCodesEnum } from '@/enums/supportedCurrenciesCodes';
 
 export interface CurrencyContextReturn {
   selectedCurrency: SupportedCurrenciesCodesEnum;
   exchangeRates: Record<string, number>;
-  supportedCurrencies: CurrencyRate[];
+  supportedCurrencies: ICurrencyRate[];
   loading: boolean;
   error: string | null;
   changeCurrency: (currency: SupportedCurrenciesCodesEnum) => void;

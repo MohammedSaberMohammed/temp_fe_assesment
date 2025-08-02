@@ -1,5 +1,5 @@
 import Papa from 'papaparse';
-import type { Invoice, DashboardStats, ProjectSummary, BudgetCodeSummary } from '@/models/invoice';
+import type { IInvoice, IDashboardStats, IProjectSummary, IBudgetCodeSummary } from '@/models/invoice';
 import { CsvFieldsKeysEnum } from '@/enums/csvFieldsKeys';
 import { HttpService } from './http';
 
@@ -28,7 +28,7 @@ export class InvoiceDataService {
     return parseFloat(cleanAmount) || 0;
   }
 
-  public async loadInvoiceData(): Promise<Invoice[]> {
+  public async loadInvoiceData(): Promise<IInvoice[]> {
     try {
       const { data: csvText } = await this.httpService.httpInstance.get('/src/mocks/data.csv', { responseType: 'text' });
 
@@ -38,7 +38,7 @@ export class InvoiceDataService {
           skipEmptyLines: true,
           complete: (results) => {
             try {
-              const invoices: Invoice[] = (results.data as CsvRow[]).map((row: CsvRow) => {
+              const invoices: IInvoice[] = (results.data as CsvRow[]).map((row: CsvRow) => {
                 const paymentAmount = this.parseAmount(row[CsvFieldsKeysEnum.PaymentAmount]);
                 
                 return {
@@ -70,7 +70,7 @@ export class InvoiceDataService {
     }
   }
 
-  public calculateDashboardStats(invoices: Invoice[]): DashboardStats {
+  public calculateDashboardStats(invoices: IInvoice[]): IDashboardStats {
     const totalInvoices = invoices.length;
     const paidInvoices = invoices.filter(inv => inv.isPaid).length;
     const totalInvoiceAmount = invoices.reduce((sum, inv) => sum + inv.invoiceAmount, 0);
@@ -78,7 +78,7 @@ export class InvoiceDataService {
     const totalOwed = totalInvoiceAmount - totalPaidAmount;
 
     // Group by project
-    const projectMap = new Map<string, ProjectSummary>();
+    const projectMap = new Map<string, IProjectSummary>();
     invoices.forEach(invoice => {
       const existing = projectMap.get(invoice.projectName) || {
         projectName: invoice.projectName,
@@ -95,7 +95,7 @@ export class InvoiceDataService {
     });
 
     // Group by budget code
-    const budgetCodeMap = new Map<string, BudgetCodeSummary>();
+    const budgetCodeMap = new Map<string, IBudgetCodeSummary>();
     invoices.forEach(invoice => {
       const existing = budgetCodeMap.get(invoice.budgetCode) || {
         budgetCode: invoice.budgetCode,

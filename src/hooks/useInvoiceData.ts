@@ -1,18 +1,18 @@
 import { useState, useEffect, useCallback } from 'react';
-import type { Invoice, DashboardStats } from '@/models/invoice';
+import type { IInvoice, IDashboardStats } from '@/models/invoice';
 import { InvoiceDataService } from '@/services/invoiceData';
 
 export interface UseInvoiceDataReturn {
-  invoices: Invoice[];
-  stats: DashboardStats | null;
+  invoices: IInvoice[];
+  stats: IDashboardStats | null;
   loading: boolean;
   error: string | null;
   refetchData: () => Promise<void>;
 }
 
 export const useInvoiceData = (): UseInvoiceDataReturn => {
-  const [invoices, setInvoices] = useState<Invoice[]>([]);
-  const [stats, setStats] = useState<DashboardStats | null>(null);
+  const [invoices, setInvoices] = useState<IInvoice[]>([]);
+  const [stats, setStats] = useState<IDashboardStats | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [dataService] = useState(() => new InvoiceDataService());
@@ -29,6 +29,7 @@ export const useInvoiceData = (): UseInvoiceDataReturn => {
       setStats(calculatedStats);
     } catch (err) {
       const errorMessage = err instanceof Error ? err.message : 'Failed to load invoice data';
+     
       setError(errorMessage);
       console.error('Error fetching invoice data:', err);
     } finally {

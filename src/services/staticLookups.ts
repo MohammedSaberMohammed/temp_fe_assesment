@@ -1,9 +1,9 @@
 import { SupportedCurrenciesCodesEnum } from "@/enums/supportedCurrenciesCodes";
-import type { CurrencyRate } from "@/models/invoice";
+import type { ICurrencyRate } from "@/models/invoice";
 
 export const DefaultCurrency = SupportedCurrenciesCodesEnum.SAR;
 
-export const SupportedCurrencies: CurrencyRate[] = [
+export const SupportedCurrencies: ICurrencyRate[] = [
   { code: SupportedCurrenciesCodesEnum.SAR, name: 'Saudi Riyal', rate: 1 },
   { code: SupportedCurrenciesCodesEnum.USD, name: 'US Dollar', rate: 0.27 },
   { code: SupportedCurrenciesCodesEnum.EUR, name: 'Euro', rate: 0.25 },
