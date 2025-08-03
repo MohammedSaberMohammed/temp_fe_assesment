@@ -3,7 +3,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { useCurrency } from '@/hooks/useCurrency';
 
-
 export const CurrencySelector: React.FC = () => {
   const { selectedCurrency, supportedCurrencies, changeCurrency, loading } = useCurrency();
 

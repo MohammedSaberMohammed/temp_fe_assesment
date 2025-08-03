@@ -12,7 +12,7 @@ export interface CurrencyContextReturn {
   loading: boolean;
   error: string | null;
   changeCurrency: (currency: SupportedCurrenciesCodesEnum) => void;
-  convertAmount: (amount: number, fromCurrency?: SupportedCurrenciesCodesEnum) => number;
+  convertAmount: (amount: number) => number;
   formatAmount: (amount: number) => string;
 }
 
@@ -58,16 +58,8 @@ export const CurrencyProvider: React.FC<CurrencyProviderProps> = ({
 
   const convertAmount = useCallback(
     (amount: number): number => {
-      console.log('Converting amount:', {
-        amount,
-        fromCurrency: DefaultCurrency,
-        toCurrency: selectedCurrency,
-        exchangeRates,
-      });
       // Convert from SAR (base currency) to selected currency
-      const result = currencyService.convertAmount(amount, DefaultCurrency, selectedCurrency, exchangeRates);
-      console.log('Conversion result:', result);
-      return result;
+      return currencyService.convertAmount(amount, selectedCurrency, exchangeRates);
     },
     [currencyService, selectedCurrency, exchangeRates]
   );

@@ -9,10 +9,10 @@ export interface IMetricCardProps {
   badgeText: string;
   bgGradient: string;
   accentGradient: string;
-  customBadges?: Array<{
+  customBadges?: {
     text: string;
     color: string;
     bgColor: string;
     borderColor: string;
-  }>;
+  }[];
 }

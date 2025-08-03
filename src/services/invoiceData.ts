@@ -76,6 +76,7 @@ export class InvoiceDataService {
     const totalInvoiceAmount = invoices.reduce((sum, inv) => sum + inv.invoiceAmount, 0);
     const totalPaidAmount = invoices.reduce((sum, inv) => sum + (inv.paymentAmount || 0), 0);
     const totalOwed = totalInvoiceAmount - totalPaidAmount;
+    const collectionRate = totalInvoiceAmount > 0 ? (totalPaidAmount / totalInvoiceAmount) * 100 : 0;
 
     // Group by project
     const projectMap = new Map<string, IProjectSummary>();
@@ -117,6 +118,7 @@ export class InvoiceDataService {
       totalInvoiceAmount,
       totalPaidAmount,
       totalOwed,
+      collectionRate,
       projectSummaries: Array.from(projectMap.values()).sort((a, b) => b.totalInvoiced - a.totalInvoiced),
       budgetCodeSummaries: Array.from(budgetCodeMap.values()).sort((a, b) => b.totalInvoiced - a.totalInvoiced),
     };

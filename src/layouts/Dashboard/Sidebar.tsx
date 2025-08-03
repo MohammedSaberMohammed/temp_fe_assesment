@@ -1,9 +1,11 @@
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { useCurrency } from '@/hooks/useCurrency';
+import { useInvoiceData } from '@/hooks/useInvoiceData';
 
 export const Sidebar: React.FC = () => {
   const { selectedCurrency } = useCurrency();
+  const { stats, loading } = useInvoiceData();
 
   return (
     <div className="flex flex-col h-full w-full lg:w-72 bg-white border-0 lg:border-r shadow-none lg:shadow-sm rounded-none lg:rounded-lg drawer-content">
@@ -20,14 +22,23 @@ export const Sidebar: React.FC = () => {
         </div>
       </div>
       
-      {/* Todo: To be dynamic */}
+      {/* Dynamic Collection Rate */}
       <div className="flex-1 p-3 lg:p-4 space-y-4 lg:space-y-6 overflow-y-auto">
         <div className="p-3 lg:p-4 bg-gradient-to-br from-green-50 to-emerald-50 border border-green-200 rounded-lg transition-all duration-200 hover:shadow-md">
           <div className="text-center space-y-1 lg:space-y-2">
-            <div className="text-xl lg:text-2xl font-bold text-green-700">94.2%</div>
+            {loading ? (
+              <div className="text-xl lg:text-2xl font-bold text-green-700">Loading...</div>
+            ) : (
+              <div className="text-xl lg:text-2xl font-bold text-green-700">
+                {stats?.collectionRate ? `${stats.collectionRate.toFixed(1)}%` : '0.0%'}
+              </div>
+            )}
             <div className="text-xs lg:text-sm text-green-600">Collection Rate</div>
             <Badge variant="secondary" className="bg-green-100 text-green-800 text-xs">
-              +2.1% this month
+              {stats?.totalPaidAmount && stats?.totalInvoiceAmount 
+                ? `${stats.totalPaidAmount.toLocaleString()} / ${stats.totalInvoiceAmount.toLocaleString()}`
+                : 'Calculating...'
+              }
             </Badge>
           </div>
         </div>

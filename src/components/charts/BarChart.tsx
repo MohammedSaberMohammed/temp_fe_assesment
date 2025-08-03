@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { chartColors } from '@/lib/colors';
 
 interface BarChartData {
   name: string;
@@ -72,9 +73,9 @@ export const BarChart: React.FC<BarChartProps> = ({
       .domain([0, maxValue])
       .range([chartHeight, 0]);
 
-    const barWidth = xScale.bandwidth() / 2 - 2;
+    const barWidth = (xScale.bandwidth() / 2) - 2;
 
-    // Add background grid (horizontal lines)
+    // Background grid (horizontal lines)
     const yTicks = yScale.ticks(5);
     g.selectAll('.grid-line')
       .data(yTicks)
@@ -85,7 +86,7 @@ export const BarChart: React.FC<BarChartProps> = ({
       .attr('x2', chartWidth)
       .attr('y1', d => yScale(d))
       .attr('y2', d => yScale(d))
-      .attr('stroke', '#f0f0f0')
+      .attr('stroke', chartColors.grid)
       .attr('stroke-width', 1);
 
     // Create groups for each item
@@ -103,7 +104,7 @@ export const BarChart: React.FC<BarChartProps> = ({
       .attr('y', chartHeight)
       .attr('width', barWidth)
       .attr('height', 0)
-      .attr('fill', '#3b82f6')
+      .attr('fill', chartColors.invoiced)
       .attr('rx', 4)
       .transition()
       .duration(1000)
@@ -118,59 +119,59 @@ export const BarChart: React.FC<BarChartProps> = ({
       .attr('y', chartHeight)
       .attr('width', barWidth)
       .attr('height', 0)
-      .attr('fill', '#10b981')
+      .attr('fill', chartColors.paid)
       .attr('rx', 4)
       .transition()
       .duration(1000)
-      .delay((_, i) => i * 100 + 200)
+      .delay((_, i) => (i * 100) + 200)
       .attr('y', d => yScale(d.paid))
       .attr('height', d => chartHeight - yScale(d.paid));
 
     // Value labels for invoiced (on top of bars)
     itemGroups.append('text')
       .attr('class', 'label-invoiced')
-      .attr('x', barWidth / 2)
+      .attr('x', (barWidth / 2))
       .attr('y', d => yScale(d.invoiced) - 8)
       .attr('text-anchor', 'middle')
       .style('font-size', '11px')
       .style('font-weight', '600')
-      .style('fill', '#3b82f6')
+      .style('fill', chartColors.invoiced)
       .style('opacity', 0)
       .text(d => formatValue(d.invoiced))
       .transition()
       .duration(1000)
-      .delay((_, i) => i * 100 + 500)
+      .delay((_, i) => (i * 100) + 500)
       .style('opacity', 1);
 
     // Value labels for paid (on top of bars)
     itemGroups.append('text')
       .attr('class', 'label-paid')
-      .attr('x', barWidth + 4 + barWidth / 2)
+      .attr('x', barWidth + 4 + (barWidth / 2))
       .attr('y', d => yScale(d.paid) - 8)
       .attr('text-anchor', 'middle')
       .style('font-size', '11px')
       .style('font-weight', '600')
-      .style('fill', '#10b981')
+      .style('fill', chartColors.paid)
       .style('opacity', 0)
       .text(d => formatValue(d.paid))
       .transition()
       .duration(1000)
-      .delay((_, i) => i * 100 + 700)
+      .delay((_, i) => (i * 100) + 700)
       .style('opacity', 1);
 
     // Payment rate labels (below x-axis)
     itemGroups.append('text')
       .attr('class', 'payment-rate')
-      .attr('x', xScale.bandwidth() / 2)
+      .attr('x', (xScale.bandwidth() / 2))
       .attr('y', chartHeight + 30)
       .attr('text-anchor', 'middle')
       .style('font-size', '11px')
       .style('font-weight', 'bold')
       .style('fill', d => {
         const rate = (d.paid / d.invoiced) * 100;
-        if (rate >= 90) return '#10b981';
-        if (rate >= 70) return '#f59e0b';
-        return '#ef4444';
+        if (rate >= 90) return chartColors.success;
+        if (rate >= 70) return chartColors.warning;
+        return chartColors.error;
       })
       .style('opacity', 0)
       .text(d => {
@@ -179,18 +180,18 @@ export const BarChart: React.FC<BarChartProps> = ({
       })
       .transition()
       .duration(1000)
-      .delay((_, i) => i * 100 + 900)
+      .delay((_, i) => (i * 100) + 900)
       .style('opacity', 1);
 
     // X-axis labels (item names)
     itemGroups.append('text')
       .attr('class', 'item-label')
-      .attr('x', xScale.bandwidth() / 2)
+      .attr('x', (xScale.bandwidth() / 2))
       .attr('y', chartHeight + 15)
       .attr('text-anchor', 'middle')
       .style('font-size', '12px')
       .style('font-weight', '500')
-      .style('fill', '#374151')
+      .style('fill', chartColors.primary)
       .text(d => {
         const maxLength = chartWidth < 600 ? 10 : 15;
         return d.name.length > maxLength ? d.name.substring(0, maxLength) + '...' : d.name;
@@ -199,7 +200,7 @@ export const BarChart: React.FC<BarChartProps> = ({
         // Rotate labels if they're too long or chart is narrow
         if (chartWidth < 800) {
           d3.select(this)
-            .attr('transform', `rotate(-45, ${xScale.bandwidth() / 2}, ${chartHeight + 15})`)
+            .attr('transform', `rotate(-45, ${(xScale.bandwidth() / 2)}, ${chartHeight + 15})`)
             .attr('text-anchor', 'end')
             .attr('y', chartHeight + 10);
         }
@@ -213,7 +214,7 @@ export const BarChart: React.FC<BarChartProps> = ({
       )
       .selectAll('text')
       .style('font-size', '11px')
-      .style('fill', '#6b7280');
+      .style('fill', chartColors.secondary);
 
     // Y-axis label
     g.append('text')
@@ -224,7 +225,7 @@ export const BarChart: React.FC<BarChartProps> = ({
       .attr('text-anchor', 'middle')
       .style('font-size', '12px')
       .style('font-weight', '600')
-      .style('fill', '#374151')
+      .style('fill', chartColors.primary)
       .text('Amount');
 
     // Legend
@@ -235,7 +236,7 @@ export const BarChart: React.FC<BarChartProps> = ({
     legend.append('rect')
       .attr('width', 12)
       .attr('height', 12)
-      .attr('fill', '#3b82f6')
+      .attr('fill', chartColors.invoiced)
       .attr('rx', 2);
 
     legend.append('text')
@@ -243,7 +244,7 @@ export const BarChart: React.FC<BarChartProps> = ({
       .attr('y', 10)
       .style('font-size', '12px')
       .style('font-weight', '500')
-      .style('fill', '#374151')
+      .style('fill', chartColors.primary)
       .text('Invoiced');
 
     // Paid legend
@@ -251,7 +252,7 @@ export const BarChart: React.FC<BarChartProps> = ({
       .attr('x', 80)
       .attr('width', 12)
       .attr('height', 12)
-      .attr('fill', '#10b981')
+      .attr('fill', chartColors.paid)
       .attr('rx', 2);
 
     legend.append('text')
@@ -259,7 +260,7 @@ export const BarChart: React.FC<BarChartProps> = ({
       .attr('y', 10)
       .style('font-size', '12px')
       .style('font-weight', '500')
-      .style('fill', '#374151')
+      .style('fill', chartColors.primary)
       .text('Paid');
 
     // Add hover effects
@@ -270,29 +271,29 @@ export const BarChart: React.FC<BarChartProps> = ({
         const tooltip = d3.select('body').append('div')
           .attr('class', 'chart-tooltip')
           .style('position', 'absolute')
-          .style('background', 'rgba(0, 0, 0, 0.9)')
+          .style('background', chartColors.tooltip.background)
           .style('color', 'white')
           .style('padding', '12px')
           .style('border-radius', '8px')
           .style('font-size', '13px')
           .style('pointer-events', 'none')
           .style('z-index', '1000')
-          .style('box-shadow', '0 4px 12px rgba(0, 0, 0, 0.15)');
+          .style('box-shadow', chartColors.shadow);
 
         const paymentRate = (d.paid / d.invoiced * 100).toFixed(1);
         const outstanding = d.invoiced - d.paid;
 
         tooltip.html(`
-          <div style="font-weight: bold; margin-bottom: 8px; border-bottom: 1px solid #374151; padding-bottom: 4px;">
+          <div style="font-weight: bold; margin-bottom: 8px; border-bottom: 1px solid ${chartColors.tooltip.border}; padding-bottom: 4px;">
             ${d.name}
           </div>
           <div style="margin-bottom: 4px;">💰 Invoiced: <strong>${formatValue(d.invoiced)}</strong></div>
           <div style="margin-bottom: 4px;">✅ Paid: <strong>${formatValue(d.paid)}</strong></div>
           <div style="margin-bottom: 4px;">⚠️ Outstanding: <strong>${formatValue(outstanding)}</strong></div>
-          <div style="color: #10b981;">📊 Payment Rate: <strong>${paymentRate}%</strong></div>
+          <div style="color: ${chartColors.success};">📊 Payment Rate: <strong>${paymentRate}%</strong></div>
         `)
-        .style('left', (event.pageX + 10) + 'px')
-        .style('top', (event.pageY - 10) + 'px');
+          .style('left', (event.pageX + 10) + 'px')
+          .style('top', (event.pageY - 10) + 'px');
       })
       .on('mouseout', function() {
         d3.select(this).selectAll('rect').style('opacity', 1);

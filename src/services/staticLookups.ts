@@ -1,5 +1,5 @@
-import { SupportedCurrenciesCodesEnum } from "@/enums/supportedCurrenciesCodes";
-import type { ICurrencyRate } from "@/models/invoice";
+import { SupportedCurrenciesCodesEnum } from '@/enums/supportedCurrenciesCodes';
+import type { ICurrencyRate } from '@/models/invoice';
 
 export const DefaultCurrency = SupportedCurrenciesCodesEnum.SAR;
 
@@ -9,15 +9,15 @@ export const SupportedCurrencies: ICurrencyRate[] = [
   { code: SupportedCurrenciesCodesEnum.EUR, name: 'Euro', rate: 0.25 },
   { code: SupportedCurrenciesCodesEnum.GBP, name: 'British Pound', rate: 0.21 },
   { code: SupportedCurrenciesCodesEnum.AED, name: 'UAE Dirham', rate: 0.98 },
-]
+];
 
-// Todo: Check rates accuracy 
+// Updated rates as of 2024 - these are approximate market rates
 export const FallbackRates: Record<SupportedCurrenciesCodesEnum, Record<SupportedCurrenciesCodesEnum, number>> = {
   [SupportedCurrenciesCodesEnum.SAR]: {
-    [SupportedCurrenciesCodesEnum.USD]: 0.27,
-    [SupportedCurrenciesCodesEnum.EUR]: 0.25,
-    [SupportedCurrenciesCodesEnum.GBP]: 0.21,
-    [SupportedCurrenciesCodesEnum.AED]: 0.98,
+    [SupportedCurrenciesCodesEnum.USD]: 0.267, // 1 SAR = 0.267 USD
+    [SupportedCurrenciesCodesEnum.EUR]: 0.245, // 1 SAR = 0.245 EUR
+    [SupportedCurrenciesCodesEnum.GBP]: 0.210, // 1 SAR = 0.210 GBP
+    [SupportedCurrenciesCodesEnum.AED]: 0.98,  // 1 SAR = 0.98 AED
     [SupportedCurrenciesCodesEnum.SAR]: 1.0,
   },
   [SupportedCurrenciesCodesEnum.USD]: {

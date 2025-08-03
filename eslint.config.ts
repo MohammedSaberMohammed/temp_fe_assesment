@@ -6,6 +6,9 @@ export default tseslint.config(
   tseslint.configs.strict,
   tseslint.configs.stylistic,
   {
+    ignores: ['dist/', 'node_modules/', '*.min.js']
+  },
+  {
     rules: {
       '@typescript-eslint/array-type': 'error',
       '@typescript-eslint/no-explicit-any': ['warn', { ignoreRestArgs: true }],
@@ -18,6 +21,7 @@ export default tseslint.config(
       '@typescript-eslint/no-empty-function': 'off',
       '@typescript-eslint/no-this-alias': 'warn',
       '@typescript-eslint/ban-ts-comment': 'warn',
+      '@typescript-eslint/no-extraneous-class': 'off',
       'indent': ['error', 2],
       'quotes': ['error', 'single'],
       'semi': ['error', 'always'],

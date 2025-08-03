@@ -20,7 +20,7 @@ export const Dashboard: React.FC = () => {
   } = useCurrency();
 
   const formatValue = (amount: number) => formatCurrency(convertAmount(amount), selectedCurrency);
-
+  const formatConvertedValue = (amount: number) => formatCurrency(amount, selectedCurrency);
 
   const chartData = useMemo(() => {
     if (!stats) return null;
@@ -128,13 +128,13 @@ export const Dashboard: React.FC = () => {
             <BarChart
               title="🏢 Project Performance Analysis"
               data={chartData.projectData}
-              formatValue={formatValue}
+              formatValue={formatConvertedValue}
             />
 
             <BarChart
               title="📋 Budget Code Performance"
               data={chartData.budgetData}
-              formatValue={formatValue}
+              formatValue={formatConvertedValue}
             />
           </div>
         )}

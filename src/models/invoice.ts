@@ -30,6 +30,7 @@ export interface IDashboardStats {
   totalInvoiceAmount: number;
   totalPaidAmount: number;
   totalOwed: number;
+  collectionRate: number;
   projectSummaries: IProjectSummary[];
   budgetCodeSummaries: IBudgetCodeSummary[];
 }

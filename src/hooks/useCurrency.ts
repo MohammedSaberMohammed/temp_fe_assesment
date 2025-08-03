@@ -1,5 +1,5 @@
-import { CurrencyContext, type CurrencyContextReturn } from "@/contexts/CurrencyContext";
-import { useContext } from "react";
+import { CurrencyContext, type CurrencyContextReturn } from '@/contexts/CurrencyContext';
+import { useContext } from 'react';
 
 export const useCurrency = (): CurrencyContextReturn => {
   const context = useContext(CurrencyContext);
