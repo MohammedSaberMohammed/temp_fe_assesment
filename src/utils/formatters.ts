@@ -1,4 +1,4 @@
-export const formatCurrency = (amount: number, currency: string = 'SAR'): string => {
+export const formatCurrency = (amount: number, currency = 'SAR'): string => {
   // Format large numbers with K, M, B abbreviations
   const formatLargeNumber = (num: number): string => {
     if (num >= 1000000000) {
@@ -41,7 +41,7 @@ export const formatPercentage = (value: number): string => {
   return `${value.toFixed(1)}%`;
 };
 
-export const formatFullCurrency = (amount: number, currency: string = 'SAR'): string => {
+export const formatFullCurrency = (amount: number, currency = 'SAR'): string => {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: currency,

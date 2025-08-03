@@ -4,6 +4,7 @@ import { CurrencySelector } from '../../components/CurrencySelector';
 import { Calendar } from 'lucide-react';
 
 export const Header: React.FC = () => {
+  const first_name = 'John';
   const getCurrentDate = () => {
     return new Date().toLocaleDateString('en-US', { 
       weekday: 'long', 

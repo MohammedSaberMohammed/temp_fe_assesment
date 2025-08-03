@@ -42,11 +42,11 @@ export class CurrencyService {
         
         if (data.rates) {
           rates = data.rates;
-        } else if ((data as any).conversion_rates) {
-          rates = (data as any).conversion_rates;
+        } else if ((data as Record<string, unknown>).conversion_rates) {
+          rates = (data as Record<string, unknown>).conversion_rates as Record<string, number>;
         } else if (typeof data === 'object') {
           // If data is directly the rates object
-          rates = data as unknown as Record<string, number>;
+          rates = data as Record<string, number>;
         }
         
         console.log('Extracted rates:', rates);
