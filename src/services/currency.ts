@@ -27,13 +27,29 @@ export class CurrencyService {
       const now = Date.now();
       
       if (cached && (now - cached.timestamp) < this.cacheTimeout) {
+        console.log('Using cached rates for', baseCurrency);
         return cached.rates;
       }
 
+      console.log('Fetching exchange rates for', baseCurrency);
       const { data, status } = await this.httpService.httpInstance.get<ICurrencyResponse>(`/${baseCurrency}`);
 
-      if (status === 200) {
-        const rates = data.rates || {};
+      console.log('API Response:', { data, status });
+
+      if (status === 200 && data) {
+        // Handle different possible response structures
+        let rates: Record<string, number> = {};
+        
+        if (data.rates) {
+          rates = data.rates;
+        } else if ((data as any).conversion_rates) {
+          rates = (data as any).conversion_rates;
+        } else if (typeof data === 'object') {
+          // If data is directly the rates object
+          rates = data as unknown as Record<string, number>;
+        }
+        
+        console.log('Extracted rates:', rates);
         
         this.cachedRates.set(baseCurrency, {
           rates,
@@ -42,10 +58,11 @@ export class CurrencyService {
         
         return rates;
       } else {
-        throw new Error('Failed to fetch exchange rates');
+        throw new Error(`Failed to fetch exchange rates. Status: ${status}`);
       }
     } catch (error) {
       console.error('Error fetching exchange rates:', error);
+      console.log('Using fallback rates for', baseCurrency);
       
       return FallbackRates[baseCurrency] || FallbackRates.SAR;
     }

@@ -39,24 +39,35 @@ export const CurrencyProvider: React.FC<CurrencyProviderProps> = ({
       setLoading(true);
       setError(null);
       
-      const rates = await currencyService.getExchangeRates(selectedCurrency);
+      // Always fetch rates for SAR (base currency), not the selected currency
+      const rates = await currencyService.getExchangeRates(DefaultCurrency);
       setExchangeRates(rates);
     } catch (err) {
+      
       const errorMessage = err instanceof Error ? err.message : 'Failed to fetch exchange rates';
       setError(errorMessage);
       console.error('Error fetching exchange rates:', err);
     } finally {
       setLoading(false);
     }
-  }, [currencyService, selectedCurrency]);
+  }, [currencyService]);
 
   const changeCurrency = useCallback((currency: SupportedCurrenciesCodesEnum) => {
     setSelectedCurrency(currency);
   }, []);
 
   const convertAmount = useCallback(
-    (amount: number, fromCurrency = DefaultCurrency): number => {
-      return currencyService.convertAmount(amount, fromCurrency, selectedCurrency, exchangeRates);
+    (amount: number): number => {
+      console.log('Converting amount:', {
+        amount,
+        fromCurrency: DefaultCurrency,
+        toCurrency: selectedCurrency,
+        exchangeRates,
+      });
+      // Convert from SAR (base currency) to selected currency
+      const result = currencyService.convertAmount(amount, DefaultCurrency, selectedCurrency, exchangeRates);
+      console.log('Conversion result:', result);
+      return result;
     },
     [currencyService, selectedCurrency, exchangeRates]
   );
@@ -70,7 +81,7 @@ export const CurrencyProvider: React.FC<CurrencyProviderProps> = ({
 
   useEffect(() => {
     fetchExchangeRates();
-  }, [fetchExchangeRates, selectedCurrency]);
+  }, [fetchExchangeRates]);
 
   const value: CurrencyContextReturn = {
     selectedCurrency,

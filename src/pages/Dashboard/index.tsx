@@ -27,23 +27,23 @@ export const Dashboard: React.FC = () => {
 
     const projectData = stats.projectSummaries.map(p => ({
       name: p.projectName,
-      invoiced: p.totalInvoiced,
-      paid: p.totalPaid,
+      invoiced: convertAmount(p.totalInvoiced),
+      paid: convertAmount(p.totalPaid),
     })).slice(0, 8);
 
     const budgetData = stats.budgetCodeSummaries.map(b => ({
       name: b.budgetCode,
-      invoiced: b.totalInvoiced,
-      paid: b.totalPaid,
+      invoiced: convertAmount(b.totalInvoiced),
+      paid: convertAmount(b.totalPaid),
     })).slice(0, 8);
 
     return {
       projectData,
       budgetData,
     };
-  }, [stats]);
+  }, [stats, convertAmount]);
   
-  if (!loading) {
+  if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <Card className="p-8">
