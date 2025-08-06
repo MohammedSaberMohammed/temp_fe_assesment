@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import * as d3 from 'd3';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { chartColors } from '@/lib/colors';
@@ -22,6 +23,7 @@ export const BarChart: React.FC<BarChartProps> = ({
   formatValue, 
   maxItems = 8 
 }) => {
+  const { t } = useTranslation();
   const chartRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [dimensions, setDimensions] = useState({ width: 800, height: 500 });
@@ -226,7 +228,7 @@ export const BarChart: React.FC<BarChartProps> = ({
       .style('font-size', '12px')
       .style('font-weight', '600')
       .style('fill', chartColors.primary)
-      .text('Amount');
+      .text(t('charts.amount'));
 
     // Legend
     const legend = g.append('g')
@@ -245,7 +247,7 @@ export const BarChart: React.FC<BarChartProps> = ({
       .style('font-size', '12px')
       .style('font-weight', '500')
       .style('fill', chartColors.primary)
-      .text('Invoiced');
+      .text(t('charts.invoiced'));
 
     // Paid legend
     legend.append('rect')
@@ -261,7 +263,7 @@ export const BarChart: React.FC<BarChartProps> = ({
       .style('font-size', '12px')
       .style('font-weight', '500')
       .style('fill', chartColors.primary)
-      .text('Paid');
+      .text(t('charts.paid'));
 
     // Add hover effects
     itemGroups
@@ -287,10 +289,10 @@ export const BarChart: React.FC<BarChartProps> = ({
           <div style="font-weight: bold; margin-bottom: 8px; border-bottom: 1px solid ${chartColors.tooltip.border}; padding-bottom: 4px;">
             ${d.name}
           </div>
-          <div style="margin-bottom: 4px;">💰 Invoiced: <strong>${formatValue(d.invoiced)}</strong></div>
-          <div style="margin-bottom: 4px;">✅ Paid: <strong>${formatValue(d.paid)}</strong></div>
-          <div style="margin-bottom: 4px;">⚠️ Outstanding: <strong>${formatValue(outstanding)}</strong></div>
-          <div style="color: ${chartColors.success};">📊 Payment Rate: <strong>${paymentRate}%</strong></div>
+          <div style="margin-bottom: 4px;">💰 ${t('charts.invoiced')}: <strong>${formatValue(d.invoiced)}</strong></div>
+          <div style="margin-bottom: 4px;">✅ ${t('charts.paid')}: <strong>${formatValue(d.paid)}</strong></div>
+          <div style="margin-bottom: 4px;">⚠️ ${t('charts.outstanding')}: <strong>${formatValue(outstanding)}</strong></div>
+          <div style="color: ${chartColors.success};">📊 ${t('charts.paymentRate')}: <strong>${paymentRate}%</strong></div>
         `)
           .style('left', (event.pageX + 10) + 'px')
           .style('top', (event.pageY - 10) + 'px');

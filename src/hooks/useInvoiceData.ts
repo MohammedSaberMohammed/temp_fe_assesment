@@ -31,7 +31,6 @@ export const useInvoiceData = (): UseInvoiceDataReturn => {
       const errorMessage = err instanceof Error ? err.message : 'Failed to load invoice data';
      
       setError(errorMessage);
-      console.error('Error fetching invoice data:', err);
     } finally {
       setLoading(false);
     }

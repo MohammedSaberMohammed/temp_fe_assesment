@@ -113,7 +113,6 @@ export const DashboardLayout: React.FC<Props> = ({ children }) => {
             </div>
           </header>
 
-          {/* Main content area with enhanced styling */}
           <main className="flex-1 overflow-y-auto bg-gray-50/50">
             <div className="container mx-auto p-6 max-w-7xl">
               {children}

@@ -33,7 +33,6 @@ export class CurrencyService {
       const { data, status } = await this.httpService.httpInstance.get<ICurrencyResponse>(`/${baseCurrency}`);
 
       if (status === 200 && data) {
-        // Handle different possible response structures
         let rates: Record<string, number> = {};
         
         if (data.rates) {
@@ -41,7 +40,6 @@ export class CurrencyService {
         } else if ((data as unknown as Record<string, unknown>).conversion_rates) {
           rates = (data as unknown as Record<string, unknown>).conversion_rates as Record<string, number>;
         } else if (typeof data === 'object') {
-          // If data is directly the rates object
           rates = data as unknown as Record<string, number>;
         }
         
@@ -55,7 +53,6 @@ export class CurrencyService {
         throw new Error(`Failed to fetch exchange rates. Status: ${status}`);
       }
     } catch (error) {
-      console.error('Error fetching exchange rates:', error);
       
       return FallbackRates[baseCurrency] || FallbackRates.SAR;
     }
@@ -66,8 +63,8 @@ export class CurrencyService {
     toCurrency: SupportedCurrenciesCodesEnum, 
     rates: Record<string, number>
   ): number {
-    // Convert from SAR (base currency) to target currency
     const rate = rates[toCurrency];
+
     return rate ? amount * rate : amount;
   }
 

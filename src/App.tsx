@@ -1,5 +1,4 @@
 import React from 'react';
-import './App.css';
 // Pages
 import { Dashboard } from './pages/Dashboard';
 import { CurrencyProvider } from './contexts/CurrencyContext';

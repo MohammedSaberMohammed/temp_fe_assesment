@@ -39,14 +39,12 @@ export const CurrencyProvider: React.FC<CurrencyProviderProps> = ({
       setLoading(true);
       setError(null);
       
-      // Always fetch rates for SAR (base currency), not the selected currency
       const rates = await currencyService.getExchangeRates(DefaultCurrency);
       setExchangeRates(rates);
     } catch (err) {
       
       const errorMessage = err instanceof Error ? err.message : 'Failed to fetch exchange rates';
       setError(errorMessage);
-      console.error('Error fetching exchange rates:', err);
     } finally {
       setLoading(false);
     }
@@ -58,7 +56,6 @@ export const CurrencyProvider: React.FC<CurrencyProviderProps> = ({
 
   const convertAmount = useCallback(
     (amount: number): number => {
-      // Convert from SAR (base currency) to selected currency
       return currencyService.convertAmount(amount, selectedCurrency, exchangeRates);
     },
     [currencyService, selectedCurrency, exchangeRates]

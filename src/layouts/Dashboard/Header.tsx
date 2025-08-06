@@ -1,9 +1,12 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Card } from '@/components/ui/card';
 import { CurrencySelector } from '../../components/CurrencySelector';
 import { Calendar } from 'lucide-react';
 
 export const Header: React.FC = () => {
+  const { t } = useTranslation();
+  
   const getCurrentDate = () => {
     return new Date().toLocaleDateString('en-US', { 
       weekday: 'long', 
@@ -16,10 +19,9 @@ export const Header: React.FC = () => {
   return (
     <Card className="border-b rounded-none shadow-sm bg-white py-0">
       <div className="flex items-center justify-between p-4">
-        {/* Left side - Title and Navigation */}
         <div className="flex items-center space-x-6">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Dashboard Overview</h1>
+            <h1 className="text-2xl font-bold text-gray-900">{t('dashboard.overview')}</h1>
             <div className="flex items-center space-x-2 text-sm text-gray-600 mt-1">
               <Calendar className="w-4 h-4" />
               <span>{getCurrentDate()}</span>
@@ -27,8 +29,7 @@ export const Header: React.FC = () => {
           </div>
         </div>
 
-        {/* Right side - Currency Selector */}
-        <div className="flex items-center relative z-50">
+        <div className="flex items-center gap-4 relative z-50">
           <CurrencySelector />
         </div>
       </div>

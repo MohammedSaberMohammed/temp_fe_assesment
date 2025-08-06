@@ -1,15 +1,17 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner';
 import { useCurrency } from '@/hooks/useCurrency';
 
 export const CurrencySelector: React.FC = () => {
+  const { t } = useTranslation();
   const { selectedCurrency, supportedCurrencies, changeCurrency, loading } = useCurrency();
 
   return (
     <div className="flex items-center gap-3">
       <label className="text-sm font-medium whitespace-nowrap">
-        💱 Currency:
+        💱 {t('currency.currency')}:
       </label>
 
       <Select
@@ -17,7 +19,7 @@ export const CurrencySelector: React.FC = () => {
         onValueChange={changeCurrency}
       >
         <SelectTrigger className="w-40 bg-white border-gray-300 hover:border-gray-400 focus:border-blue-500">
-          <SelectValue placeholder="Select currency" />
+          <SelectValue placeholder={t('currency.selectCurrency')} />
         </SelectTrigger>
 
         <SelectContent className="bg-white border-gray-200 shadow-lg max-h-60 overflow-auto z-[9999] min-w-[200px]">
