@@ -1,0 +1,7 @@
+echo "🔍 Running linting before push..."
+npm run lint
+
+echo "🏗️  Running build before push..."
+npm run build
+
+echo "✅ Pre-push checks passed!" 

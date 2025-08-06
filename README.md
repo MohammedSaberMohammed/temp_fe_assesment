@@ -1,69 +1,120 @@
-# React + TypeScript + Vite
+# MSaber Frontend
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern React dashboard application with TypeScript, Tailwind CSS, and D3.js charts.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Interactive dashboard with D3.js charts
+- Multi-currency support with real-time exchange rates
+- Responsive design with mobile support
+- Modern UI with Tailwind CSS
+- TypeScript for type safety
 
-## Expanding the ESLint configuration
+## Development
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### Installation
 
-```js
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      ...tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      ...tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      ...tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Development Server
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+npm run dev
 ```
+
+### Build
+
+```bash
+npm run build
+```
+
+### Linting
+
+```bash
+npm run lint
+npm run lint:fix
+```
+
+### Formatting
+
+```bash
+npm run format
+npm run format:check
+```
+
+## Git Hooks (Husky)
+
+This project uses Husky to ensure code quality before commits and pushes.
+
+### Pre-commit Hook
+
+Before each commit, the following checks are automatically run:
+
+1. **Lint-staged**: Runs ESLint and Prettier on staged files only (fast)
+
+### Pre-push Hook
+
+Before pushing to the repository:
+
+1. **Linting**: Runs full ESLint check on all files
+2. **Build**: Ensures the project builds successfully
+
+### Configuration
+
+- **Husky**: Git hooks management
+- **lint-staged**: Runs linters on staged files only
+- **ESLint**: JavaScript/TypeScript linting
+- **Prettier**: Code formatting
+
+### Files
+
+- `.husky/pre-commit`: Pre-commit hook script
+- `.husky/pre-push`: Pre-push hook script
+- `package.json`: lint-staged configuration
+
+### Manual Testing
+
+You can test the hooks manually:
+
+```bash
+# Test lint-staged
+npx lint-staged
+
+# Test pre-commit hook
+npx husky run .husky/pre-commit
+
+# Test pre-push hook
+npx husky run .husky/pre-push
+```
+
+## Project Structure
+
+```
+src/
+├── components/          # Reusable UI components
+│   ├── charts/         # D3.js chart components
+│   └── ui/             # Base UI components
+├── contexts/           # React contexts
+├── hooks/              # Custom React hooks
+├── i18n/               # Internationalization
+│   └── locales/        # Translation files
+├── layouts/            # Layout components
+├── pages/              # Page components
+├── services/           # API and data services
+├── utils/              # Utility functions
+└── models/             # TypeScript interfaces
+```
+
+## Technologies
+
+- **React 19** - UI framework
+- **TypeScript** - Type safety
+- **Tailwind CSS** - Styling
+- **D3.js** - Data visualization
+- **Vite** - Build tool
+- **i18next** - Internationalization
+- **Husky** - Git hooks
+- **ESLint** - Code linting
+- **Prettier** - Code formatting
